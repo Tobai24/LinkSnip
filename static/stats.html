@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LinkSnip Stats</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>LinkSnip Stats</h1>
+    <div id="stats"></div>
+    <script>
+        const slug = new URLSearchParams(window.location.search).get("slug");
+        fetch(`/stats/${slug}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("stats").innerHTML = `
+                    <p>Link: ${data.slug}</p>
+                    <p>Original: ${data.original_url}</p>
+                    <p>Clicks: ${data.clicks}</p>
+                    <p>Last Click: ${data.last_click || "None"}</p>
+                `;
+            })
+            .catch(() => {
+                document.getElementById("stats").textContent = "Link not found!";
+            });
+    </script>
+</body>
+</html>
