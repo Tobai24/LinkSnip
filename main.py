@@ -1,11 +1,15 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
-from models import Link
+from fastapi.middleware.cors import CORSMiddleware
+from LinkSnip.models import Link
 from database import init_db, read_db, write_db
 from datetime import datetime
 
 app = FastAPI()
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 @app.on_event("startup")
 def startup_event():

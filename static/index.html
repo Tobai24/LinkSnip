@@ -1,48 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>LinkSnip</title>
-    <link rel="stylesheet" href="/style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
     <h1>LinkSnip</h1>
-    <input id="url" placeholder="Enter long URL" size="50">
-    <input id="slug" placeholder="Custom slug (optional)">
+    <input id="url" placeholder="Enter long URL" size="50" />
+    <input id="slug" placeholder="Custom slug (optional)" />
     <button onclick="shorten()">Snip It!</button>
     <div id="result"></div>
     <script>
-        async function shorten() {
-            const url = document.getElementById("url").value;
-            const slug = document.getElementById("slug").value;
-            try {
-                const res = await fetch("/shorten", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ url, slug })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    const shortUrl = `${window.location.origin}${data.short_url}`;
-                    document.getElementById("result").innerHTML = `
+      async function shorten() {
+        const url = document.getElementById("url").value;
+        const slug = document.getElementById("slug").value;
+        try {
+          const res = await fetch("/shorten", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url, slug }),
+          });
+          const data = await res.json();
+          if (res.ok) {
+            const shortUrl = `${window.location.origin}${data.short_url}`;
+            document.getElementById("result").innerHTML = `
                         Short link: <a href="${shortUrl}">${shortUrl}</a><br>
                         <button onclick="copyLink('${shortUrl}')">Copy</button>
-                        <a href="/stats.html?slug=${slug || data.short_url.split("/").pop()}">View Stats</a>
+                        <a href="/stats.html?slug=${
+                          slug || data.short_url.split("/").pop()
+                        }">View Stats</a>
                         <button onclick="shareToX('${shortUrl}')">Share to X</button>
                     `;
-                } else {
-                    document.getElementById("result").textContent = data.detail;
-                }
-            } catch (e) {
-                document.getElementById("result").textContent = "Error: Try again!";
-            }
+          } else {
+            document.getElementById("result").textContent = data.detail;
+          }
+        } catch (e) {
+          document.getElementById("result").textContent = "Error: Try again!";
         }
-        function copyLink(link) {
-            navigator.clipboard.writeText(link);
-            alert("Link copied!");
-        }
-        function shareToX(link) {
-            window.open(`https://x.com/share?text=Check my snipped link: ${link} via LinkSnip! #LinkSnip`);
-        }
+      }
+      function copyLink(link) {
+        navigator.clipboard.writeText(link);
+        alert("Link copied!");
+      }
+      function shareToX(link) {
+        window.open(
+          `https://x.com/share?text=Check my snipped link: ${link} via LinkSnip! #LinkSnip`
+        );
+      }
     </script>
-</body>
+  </body>
 </html>
